@@ -1,1 +1,67 @@
-buatkan aplikasi rekam medis menggunakan reactjs dengan fitur untuk dokter/admin aplikasi bisa download pdf report bulanan pasien dengan detail lengkap, fitur dashboard lengkap, menu poli ada tiga yaitu poli umum, dan gigi. fitur rekam medis lengkap dan buatkan dan halaman untuk pasien untuk daftar poli dan jadwal nya datang ke poli yang di inginkan nya dan setelah daftar poli dari pasien setelah itu dokter/admin mendapatkan notifikasi dari pasien untuk kunjungan berobat ke poli yang dipilih, setelah admin mendapatkan notifikasi lalu di accept oleh admin untuk kedatangan berobat pasien dan selanjut nya pasien datang sesuai jadwal yang di pilih, setelah datang selanjutnya buatkan halaman untuk dokter untuk menginputkan DIAGNOSA TERAPI & RESEP  OBJEKTIF (PEMERIKSAAN)  ANAMNESA (KELUHAN) dan input obat untuk pasien untuk di tebus ke bagian farmasi di buktikan surat pdf dari dokter secara otomatis dapat di download kan dari aplikasi, dan buatkan juga input jadwal kontrol selanjutnya untuk pasien, dan buatkan juga fitur untuk pasien untuk setiap bulan mendapatkan notif secara otomatis jadwal kunjugan yang sudah di inputkan oleh dokter/admin diawal kunjungan. flow step di awal terdapat pasien daftar akun buatkan form pendaftaran akun nya dan login juga, dokter/admin tidak perlu daftar akun cuman form login nya, buatkan aplikasi nya keren dan canggih , tampilannya kekinian 
+src/
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── Sidebar.jsx
+│   │   │   ├── Header.jsx
+│   │   │   └── Layout.jsx
+│   │   │
+│   │   ├── auth/
+│   │   │   ├── LoginPage.jsx
+│   │   │   └── RegisterPage.jsx
+│   │   │
+│   │   ├── patient/
+│   │   │   ├── PatientDashboard.jsx
+│   │   │   ├── AppointmentBooking.jsx
+│   │   │   ├── AppointmentList.jsx
+│   │   │   └── ControlScheduleNotifications.jsx
+│   │   │
+│   │   └── doctor/
+│   │       ├── AdminDashboard.jsx
+│   │       ├── AppointmentManagement.jsx
+│   │       ├── MedicalRecordForm.jsx
+│   │       ├── MedicalRecordsList.jsx
+│   │       ├── MonthlyReport.jsx
+│   │       ├── PatientList.jsx
+│   │       └── PoliList.jsx
+│   │
+│   ├── pages/
+│   │   ├── LoginPage.jsx
+│   │   ├── RegisterPage.jsx
+│   │   ├── DashboardPage.jsx
+│   │   ├── AppointmentsPage.jsx
+│   │   ├── MedicalRecordsPage.jsx
+│   │   ├── PatientsPage.jsx
+│   │   ├── PoliUmumPage.jsx
+│   │   ├── PoliGigiPage.jsx
+│   │   └── ReportPage.jsx
+│   │
+│   ├── context/
+│   │   └── AuthContext.jsx
+│   │
+│   ├── hooks/
+│   │   ├── useAppointments.js
+│   │   ├── useMedicalRecords.js
+│   │   └── useLocalStorage.js
+│   │
+│   ├── utils/
+│   │   ├── helpers.js
+│   │   ├── constants.js
+│   │   └── animations.js
+│   │
+│   ├── services/
+│   │   ├── appointmentService.js
+│   │   ├── medicalRecordService.js
+│   │   └── authService.js
+│   │
+│   ├── routes/
+│   │   ├── Routes.jsx
+│   │   ├── ProtectedRoute.jsx
+│   │   └── RoleBasedRoute.jsx
+│   │
+│   ├── styles/
+│   │   ├── animations.css
+│   │   └── globals.css
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css

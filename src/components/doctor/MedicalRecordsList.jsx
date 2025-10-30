@@ -1,6 +1,6 @@
 // src/components/doctor/MedicalRecordsList.jsx
 import React from 'react';
-import { FileText, Download, Clock } from 'lucide-react';
+import { FileText, Download, Clock, ClipboardList, } from 'lucide-react';
 import { formatDate, downloadTextFile } from '../../utils/helpers';
 
 const MedicalRecordsList = ({ records }) => {
@@ -55,7 +55,11 @@ Dokumen ini sah untuk ditebus di Farmasi
 
     return (
         <div className="bg-white rounded-3xl shadow-lg p-8 border border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Rekam Medis</h2>
+            <h2 className="text-2xl flex gap-2 font-bold text-gray-800 mb-6">
+                <div className="bg-teal-100 p-3 rounded-xl">
+                    <ClipboardList className="w-6 h-6 text-teal-600" />
+                </div>
+                Rekam Medis</h2>
 
             {records.length === 0 ? (
                 <div className="text-center py-12">

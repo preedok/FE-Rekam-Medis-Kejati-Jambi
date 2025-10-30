@@ -1,13 +1,14 @@
 // src/components/doctor/PoliList.jsx
 import React from 'react';
 import { formatDate, getStatusColor, getStatusText } from '../../utils/helpers';
+import { Users, ClipboardList, } from 'lucide-react';
 
 const PoliList = ({ appointments, poli, icon: Icon }) => {
     const filteredAppointments = appointments.filter(a => a.poli === poli);
 
     return (
         <div className="bg-white rounded-3xl shadow-lg p-8 border border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+            <h2 className="text-2xl flex gap-2 font-bold text-gray-800 mb-6 items-center">
                 <div className="bg-teal-100 p-3 rounded-xl">
                     <Icon className="w-6 h-6 text-teal-600" />
                 </div>

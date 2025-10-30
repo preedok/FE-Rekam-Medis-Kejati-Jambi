@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { DOCTORS, POLI_TYPES } from '../../utils/constants';
 import { getMinDate } from '../../utils/helpers';
-
+import { ClipboardList, } from 'lucide-react';
 const AppointmentBooking = ({ user, onBook }) => {
     const [formData, setFormData] = useState({
         poli: POLI_TYPES.UMUM,
@@ -43,7 +43,11 @@ const AppointmentBooking = ({ user, onBook }) => {
 
     return (
         <div className="bg-white rounded-3xl shadow-lg p-8 border border-gray-100">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Daftar Poli</h2>
+            <h2 className="text-2xl flex gap-2 font-bold text-gray-800 mb-6">
+                <div className="bg-teal-100 p-3 rounded-xl">
+                    <ClipboardList className="w-6 h-6 text-teal-600" />
+                </div>
+                Daftar Poli</h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>

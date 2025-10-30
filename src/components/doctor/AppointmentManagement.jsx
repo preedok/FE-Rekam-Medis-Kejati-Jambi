@@ -88,7 +88,11 @@ const AppointmentManagement = ({ appointments, onUpdateStatus, currentDoctorId }
             )}
 
             <div className="bg-white rounded-3xl shadow-lg p-8 border border-gray-100">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Jadwal Approved</h2>
+                <h2 className="text-2xl  flex gap-2 font-bold text-gray-800 mb-6">
+                    <div className="bg-teal-100 p-3 rounded-xl">
+                        <ClipboardList className="w-6 h-6 text-teal-600" />
+                    </div>
+                    Jadwal Approved</h2>
                 {approvedAppointments.length === 0 ? (
                     <div className="text-center py-12">
                         <div className="bg-gray-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">

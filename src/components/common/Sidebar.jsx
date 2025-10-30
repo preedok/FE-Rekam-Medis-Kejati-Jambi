@@ -6,6 +6,7 @@ import {
     Plus, ClipboardList, Stethoscope, Activity,
     LogOut, Menu
 } from 'lucide-react';
+import logo from "../../assets/logo-kejaksaan.png"
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     const { user, logout } = useAuth();
@@ -40,7 +41,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                         <div>
                             <div className="flex items-center gap-3 mb-2">
                                 <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                                    <Activity className="w-6 h-6" />
+                                    <img src={logo} alt="" />
                                 </div>
                                 <div>
                                     <h1 className="text-xl font-bold">Kejati Jambi</h1>

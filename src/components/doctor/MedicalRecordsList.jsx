@@ -1,56 +1,149 @@
 // src/components/doctor/MedicalRecordsList.jsx
 import React from 'react';
-import { FileText, Download, Clock, ClipboardList, } from 'lucide-react';
-import { formatDate, downloadTextFile } from '../../utils/helpers';
+import { FileText, Download, Clock, ClipboardList } from 'lucide-react';
+import { formatDate } from '../../utils/helpers';
+import jsPDF from 'jspdf';
 
 const MedicalRecordsList = ({ records }) => {
     const downloadPDF = (record) => {
-        const pdfContent = `
-===========================================
-      SURAT KETERANGAN RESEP OBAT
-===========================================
+        const doc = new jsPDF();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const margin = 20;
+        const contentWidth = pageWidth - (2 * margin);
+        let yPosition = 20;
 
-Tanggal: ${formatDate(record.createdAt)}
-No. Rekam Medis: ${record.id}
+        // Helper function to add text with word wrap
+        const addText = (text, fontSize = 10, isBold = false, align = 'left') => {
+            doc.setFontSize(fontSize);
+            if (isBold) {
+                doc.setFont(undefined, 'bold');
+            } else {
+                doc.setFont(undefined, 'normal');
+            }
 
-IDENTITAS PASIEN
-Nama       : ${record.patientName}
-Poli       : ${record.poli}
-Tgl Periksa: ${formatDate(record.date)}
+            const lines = doc.splitTextToSize(text, contentWidth);
 
--------------------------------------------
-ANAMNESA (KELUHAN):
-${record.anamnesa}
+            if (align === 'center') {
+                lines.forEach(line => {
+                    const textWidth = doc.getTextWidth(line);
+                    const xPosition = (pageWidth - textWidth) / 2;
+                    doc.text(line, xPosition, yPosition);
+                    yPosition += 6;
+                });
+            } else {
+                doc.text(lines, margin, yPosition);
+                yPosition += (lines.length * 6);
+            }
+        };
 
--------------------------------------------
-OBJEKTIF (PEMERIKSAAN):
-${record.objective}
+        const addLine = () => {
+            doc.setLineWidth(0.5);
+            doc.line(margin, yPosition, pageWidth - margin, yPosition);
+            yPosition += 8;
+        };
 
--------------------------------------------
-DIAGNOSIS:
-${record.diagnosis}
+        const addSection = (title, content) => {
+            // Check if we need a new page
+            if (yPosition > 250) {
+                doc.addPage();
+                yPosition = 20;
+            }
 
--------------------------------------------
-TERAPI & TINDAKAN:
-${record.therapy}
+            // Title
+            doc.setFillColor(20, 184, 166); // Teal color
+            doc.rect(margin, yPosition - 5, contentWidth, 8, 'F');
+            doc.setTextColor(255, 255, 255);
+            addText(title, 10, true);
+            doc.setTextColor(0, 0, 0);
+            yPosition += 2;
 
--------------------------------------------
-RESEP OBAT:
-${record.prescription}
+            // Content
+            addText(content, 10, false);
+            yPosition += 5;
+        };
 
--------------------------------------------
-JADWAL KONTROL:
-${record.nextVisit ? formatDate(record.nextVisit) : 'Tidak ada jadwal kontrol'}
+        // Header
+        doc.setFillColor(20, 184, 166);
+        doc.rect(0, 0, pageWidth, 40, 'F');
 
--------------------------------------------
-Dokter Pemeriksa: ${record.createdBy}
+        doc.setTextColor(255, 255, 255);
+        addText('SURAT KETERANGAN RESEP OBAT', 16, true, 'center');
+        yPosition += 2;
+        addText('Kejaksaan Tinggi Jambi - Digital Health', 10, false, 'center');
+        doc.setTextColor(0, 0, 0);
+        yPosition += 10;
 
-===========================================
-Dokumen ini sah untuk ditebus di Farmasi
-===========================================
-    `;
+        // Document Info
+        doc.setFontSize(9);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Tanggal: ${formatDate(record.createdAt || new Date().toISOString())}`, margin, yPosition);
+        doc.text(`No. RM: ${record.id}`, pageWidth - margin - 40, yPosition);
+        yPosition += 10;
 
-        downloadTextFile(pdfContent, `resep_${record.patientName}_${record.id}.txt`);
+        addLine();
+
+        // Patient Identity
+        addText('IDENTITAS PASIEN', 12, true);
+        yPosition += 2;
+
+        const patientInfo = [
+            `Nama          : ${record.patientName}`,
+            `Poli          : ${record.poli}`,
+            `Tgl Periksa   : ${formatDate(record.date)}`,
+        ];
+
+        patientInfo.forEach(info => {
+            addText(info, 10);
+        });
+        yPosition += 3;
+
+        addLine();
+
+        // Medical Sections
+        addSection('ANAMNESA (KELUHAN)', record.anamnesa);
+        addSection('OBJEKTIF (PEMERIKSAAN)', record.objective);
+        addSection('DIAGNOSIS', record.diagnosis);
+        addSection('TERAPI & TINDAKAN', record.therapy);
+        addSection('RESEP OBAT', record.prescription);
+
+        if (record.nextVisit) {
+            addSection('JADWAL KONTROL SELANJUTNYA', formatDate(record.nextVisit));
+        }
+
+        yPosition += 5;
+        addLine();
+
+        // Doctor signature
+        yPosition += 5;
+        addText(`Dokter Pemeriksa: ${record.createdBy}`, 10, true);
+        yPosition += 15;
+
+        // Add signature box
+        doc.setDrawColor(200, 200, 200);
+        doc.rect(pageWidth - margin - 60, yPosition - 10, 60, 30);
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text('Tanda Tangan & Stempel', pageWidth - margin - 55, yPosition + 15);
+
+        yPosition += 35;
+
+        // Footer
+        if (yPosition > 260) {
+            doc.addPage();
+            yPosition = 20;
+        }
+
+        doc.setFillColor(240, 240, 240);
+        doc.rect(margin, yPosition, contentWidth, 15, 'F');
+        doc.setFontSize(9);
+        doc.setTextColor(100, 100, 100);
+        const footerText = 'Dokumen ini sah untuk ditebus di Farmasi';
+        const footerWidth = doc.getTextWidth(footerText);
+        doc.text(footerText, (pageWidth - footerWidth) / 2, yPosition + 10);
+
+        // Save PDF
+        const fileName = `Resep_${record.patientName.replace(/\s+/g, '_')}_${record.id}.pdf`;
+        doc.save(fileName);
     };
 
     return (
@@ -59,7 +152,8 @@ Dokumen ini sah untuk ditebus di Farmasi
                 <div className="bg-teal-100 p-3 rounded-xl">
                     <ClipboardList className="w-6 h-6 text-teal-600" />
                 </div>
-                Rekam Medis</h2>
+                Rekam Medis
+            </h2>
 
             {records.length === 0 ? (
                 <div className="text-center py-12">
@@ -83,7 +177,7 @@ Dokumen ini sah untuk ditebus di Farmasi
                                     className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-xl hover:shadow-lg transition-all text-sm font-medium"
                                 >
                                     <Download className="w-4 h-4" />
-                                    Download Resep
+                                    Download PDF
                                 </button>
                             </div>
 
